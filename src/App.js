@@ -1,25 +1,27 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useQuery, gql } from '@apollo/client';
+
+const ALL_STARSHIPS = gql`
+  {
+    allStarships {
+      id
+      name
+    }
+  }
+`
 
 function App() {
+  const { loading, error, data} = useQuery(ALL_STARSHIPS);
+  if(loading) return <p>Loading...</p>
+  if(error) return <p>Error............!!</p>
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <h2>Star Wars Spaceships <span role="img" aria-label="spaceships">🚀</span></h2>
+      {data.allStarships.map((starship, id) => (
+        <p key={id}>{starship.name}</p>
+      ))}
+    </>
   );
 }
 
